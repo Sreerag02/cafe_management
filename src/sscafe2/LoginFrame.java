@@ -3,7 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package sscafe2;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import model.AdminDao;
+import model.Admin;
 
 
 /**
@@ -17,6 +22,7 @@ public class LoginFrame extends javax.swing.JFrame {
     /**
      * Creates new form LoginFrame
      */
+    AdminDao dao = new AdminDao();
     int xx,xy;
     public LoginFrame() {
         initComponents();
@@ -49,6 +55,14 @@ public class LoginFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(158, 111, 78));
         jPanel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -148,6 +162,11 @@ public class LoginFrame extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Forgot Password");
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 340, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
@@ -158,6 +177,11 @@ public class LoginFrame extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setText("Sign UP");
+        jLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel10MouseClicked(evt);
+            }
+        });
         jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 320, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -181,8 +205,42 @@ public class LoginFrame extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        if (isEmpty()){
+            String username = jTextField5.getText().trim();
+            String password = String.valueOf(jPasswordField1.getPassword());
+            if (dao.getMaxRowAdminTable() != 1) {
+                try {
+                    if(dao.login(username, password)) {
+                        JOptionPane.showMessageDialog(this, "Login Success!!");
+                        new HomeFrame().setVisible(true);
+                        setVisible(false);
+                    }else {
+                        JOptionPane.showMessageDialog(this, "Incorrect username and password.","Login failed",2);
+                    }
+                } catch (SQLException ex) {
+                    System.getLogger(LoginFrame.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
+            }else{
+                JOptionPane.showMessageDialog(this, "No admin in the admin table!!\nYou need to sign up first.","Login failed",2);
+                new SignUpFrame().setVisible(true);
+                setVisible(false);
+            }
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    public boolean isEmpty() {
+        if (jTextField5.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Username should not be empty ", "Warning", 2);
+            return false;
+        }
+
+        if (String.valueOf(jPasswordField1.getPassword()).isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Password is Requried", "Warning", 2);
+            return false;
+        }
+        return true;
+    }
+    
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -228,6 +286,38 @@ public class LoginFrame extends javax.swing.JFrame {
         this.setLocation(x -xx, y -xy);
     }//GEN-LAST:event_jPanel1MouseDragged
 
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        for(double i = 0.1; i<=1.0;i+=0.1){
+            String s = "" + i;
+            float f = Float.parseFloat(s);
+            this.setOpacity(f);
+            try{
+                Thread.sleep(40);
+            
+            }catch(InterruptedException ex){
+               Logger.getLogger(SignUpFrame.class.getName()).log(Level.SEVERE, null, ex);
+           
+            }
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
+        // TODO add your handling code here:
+        new SignUpFrame().setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_jLabel10MouseClicked
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        // TODO add your handling code here:
+        new ForgotPasswordFrame().setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_jLabel5MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -270,4 +360,14 @@ public class LoginFrame extends javax.swing.JFrame {
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
+
+    private static class HomeFrame {
+
+        public HomeFrame() {
+        }
+
+        private void setVisible(boolean b) {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+    }
 }

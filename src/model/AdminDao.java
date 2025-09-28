@@ -6,6 +6,8 @@ package model;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,6 +16,7 @@ public class AdminDao {
     
     Connection con = MyConnection.getConnection();  // ✅ make sure it's MyConnection (not Myconnection)
     Statement st;
+    PreparedStatement ps;
     ResultSet rs;
     
     public int getMaxRowAdminTable() {
@@ -27,6 +30,49 @@ public class AdminDao {
         } catch (Exception ex) {   // ✅ Exception spelling
             Logger.getLogger(AdminDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return row;   // ✅ always return result
+        return row + 1;   // ✅ always return result
+    }
+    public boolean isAdminNameExist(String username) {
+        try {
+            ps = con.prepareStatement("select * from admin where username = ?");
+            ps.setString(1, username);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        }catch (Exception ex) {
+            Logger.getLogger(AdminDao.class.getName()).log(Level.SEVERE, null, ex);
+        }    
+        return false;
+    }
+    
+    public boolean insert(Admin admin) {
+        String sql = "insert into admin (id, username, password, s_ques, ans) values (?, ?, ?, ?, ?)";
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setInt( 1, admin.getId());
+            ps.setString(2, admin.getUsername());
+            ps.setString(3, admin.getPassword());
+            ps.setString(4, admin.getsQues());
+            ps.setString(5, admin.getAns());
+            return ps.executeUpdate() > 0;
+        }catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean login(String username, String password) throws SQLException {
+        try {
+            ps =con.prepareStatement("select * from admin where username = ? and password = ?");
+            ps.setString(1, username);
+            ps.setString(2, password);
+            rs = ps.executeQuery();
+            if (rs. next()) {
+                return true;
+            }
+        } catch (Exception ex){
+            Logger.getLogger(AdminDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 }

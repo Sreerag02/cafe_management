@@ -8,8 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.AdminDao;
-
-
+import model.Admin;
 /**
  *
  * @author rajee
@@ -227,10 +226,34 @@ public class SignUpFrame extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        if(isEmpty()) {
+            String username = jTextField4.getText().trim();
+            if(! dao.isAdminNameExist(username)) {
+                Admin admin = new Admin();
+                admin.setId(dao.getMaxRowAdminTable());
+                admin.setUsername(username);
+                admin.setPassword(String.valueOf(jPasswordField1.getPassword()));
+                admin.setsQues(jComboBox1.getSelectedItem().toString());
+                admin.setAns(jTextField3.getText().trim());
+                
+                if (dao.insert(admin)){
+                    JOptionPane.showMessageDialog(this, "Admin Successfully Created..");
+                    new LoginFrame().setVisible(true);
+                    setVisible(false);                   
+                }
+                else {
+                    JOptionPane.showMessageDialog(this, "Failed!!", "Warning", 2);
+                }
+            }else {
+                JOptionPane.showMessageDialog(this, "Username already exists..", "Warning", 2);
+            }
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        new LoginFrame().setVisible(true);
+        setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
