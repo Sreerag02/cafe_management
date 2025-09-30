@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 
 public class MyConnection {
     public static final String username = "root";
-    public static final String password = "sreerag1.16.";
+    public static final String password = "parvathi";
     public static final String url = "jdbc:mysql://localhost:3306/cafe2"; //
     public static Connection con = null;
     
