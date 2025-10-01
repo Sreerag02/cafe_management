@@ -22,7 +22,7 @@ public class AddProductFrame extends javax.swing.JFrame {
     private File file;
     int xx, xy;
     Dao dao = new Dao();
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AddProductFrame.class.getName());
+    
 
     /**
      * Creates new form AddProductFrame
@@ -248,7 +248,7 @@ public class AddProductFrame extends javax.swing.JFrame {
                 Thread.sleep(40);
 
             } catch (InterruptedException ex) {
-                Logger.getLogger(SignUpFrame.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddProductFrame.class.getName()).log(Level.SEVERE, null, ex);
 
             }
         }        // TODO add your handling code here:

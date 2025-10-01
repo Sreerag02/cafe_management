@@ -4,6 +4,10 @@
  */
 package sscafe2;
 
+import java.awt.Color;
+import java.awt.Image;
+import javax.swing.table.TableCellRenderer;
+
 /**
  *
  * @author HP
@@ -15,10 +19,26 @@ public class AllProductsFrame extends javax.swing.JFrame {
     /**
      * Creates new form AllProductsFrame
      */
+    int xx,xy;
+    Dao dao = new Dao();
+    DefaultTableModel model;
     public AllProductsFrame() {
         initComponents();
     }
-
+    private void tableProduct(){
+        dao.getallProducts(jTable1);
+        model = (DefaultTableModel) jTable1.getModel();
+        jTable1.setRowHeight(100);
+        jTable1.setShowGrid(true);
+        jTable1.setGridColor(Color.black);
+        jTable1.setBackground(Color.white);
+        jTable1.setSelectionBackground(Color.gray);
+        jTable1.setModel(Model);
+        jTable1.getTableHeader().setReorderingAllowed(false);
+        jTable1.getColumnModel().getColumn(3).setCellRenderer(new AllProductsFrame().ImageRenderer());
+         
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,8 +54,23 @@ public class AllProductsFrame extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                formMouseDragged(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(158, 111, 78));
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel1MousePressed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Helvetica Neue", 1, 35)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
@@ -102,6 +137,51 @@ public class AllProductsFrame extends javax.swing.JFrame {
         setVisible(false);        // TODO add your handling code here:
     }//GEN-LAST:event_jLabel4MouseClicked
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        for (double i=0.1;i<=1.0;i+=0.1){
+            String s=""+i;
+            float f = Float.parseFloat(s);
+            this.setOpacity(f);
+            try{
+                Thread.sleep(40);
+                
+            } catch (InterruptedException ex){
+                Logger.getLogger(AllProductsFrame.class.getName()).log(Level.SEVERE,null,ex);
+            }
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
+        // TODO add your handling code here:
+        xx = evt.getX();
+        xy = evt.getY();
+    }//GEN-LAST:event_jPanel1MousePressed
+
+    private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
+        // TODO add your handling code here:
+        int x = evt.getXOnScreen();
+        int y = evt.getYOnScreen();
+        this.setLocation(x - xx, y - xy);
+    }//GEN-LAST:event_formMouseDragged
+
+    TableCellRenderer ImageRenderer() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    private class ImageRenderer extends DefaultTableCellRenderer{
+        @Override
+        public Component getTableCellRendererComponent(JTable table,Object value, boolean isSelected, boolean hasFocus, int row, int column){
+            JLabel jL= new JLabel();
+            byte[] bytes=(byte[]) value;
+            ImageIcon imageicon = new ImageIcon(new ImageIcon(bytes).getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT));
+            jL.setIcon(imageicon);
+            return jL;
+            
+            
+            
+        }
+        
+    }
     /**
      * @param args the command line arguments
      */
